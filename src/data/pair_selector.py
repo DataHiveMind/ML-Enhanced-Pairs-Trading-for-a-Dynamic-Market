@@ -69,7 +69,7 @@ class PairSelector:
             Hedge ratio (beta coefficient)
         """
         model = OLS(price1, price2).fit()
-        hedge_ratio = model.params[0]
+        hedge_ratio = model.params.iloc[0] if hasattr(model.params, 'iloc') else model.params[0]
         
         return hedge_ratio
     
