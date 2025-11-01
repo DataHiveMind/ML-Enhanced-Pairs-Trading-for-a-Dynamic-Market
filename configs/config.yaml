@@ -1,0 +1,55 @@
+# Configuration file for ML-Enhanced Pairs Trading
+
+# Data settings
+data:
+  start_date: '2020-01-01'
+  end_date: '2023-12-31'
+  tickers:
+    - 'AAPL'
+    - 'MSFT'
+    - 'GOOGL'
+    - 'AMZN'
+    - 'META'
+  data_source: 'yfinance'
+
+# Pairs selection parameters
+pairs_selection:
+  significance_level: 0.05
+  lookback_period: 252  # 1 year
+  min_correlation: 0.7
+
+# Feature engineering parameters
+features:
+  technical_windows: [5, 10, 20, 50]
+  spread_windows: [10, 20, 50]
+  lag_periods: [1, 2, 3, 5]
+
+# Trading strategy parameters
+strategy:
+  entry_threshold: 2.0  # Z-score threshold for entry
+  exit_threshold: 0.5   # Z-score threshold for exit
+  zscore_window: 20     # Rolling window for z-score calculation
+  hedge_ratio: 1.0      # Default hedge ratio
+
+# Backtesting parameters
+backtesting:
+  initial_capital: 100000
+  position_size: 0.5  # Fraction of capital per trade
+  transaction_cost: 0.001  # 0.1% per trade
+
+# Model parameters
+model:
+  type: 'random_forest'  # Can be: random_forest, xgboost, lightgbm
+  hyperparameters:
+    n_estimators: 100
+    max_depth: 10
+    random_state: 42
+  train_test_split: 0.8
+  cross_validation_folds: 5
+
+# Output settings
+output:
+  save_models: true
+  save_results: true
+  plot_results: true
+  verbose: true
