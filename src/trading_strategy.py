@@ -75,6 +75,6 @@ class PairsTradingStrategy:
         signals.loc[abs(zscore) < self.exit_threshold, 'signal'] = 0  # Exit position
         
         # Forward fill to maintain positions
-        signals['position'] = signals['signal'].replace(0, np.nan).fillna(method='ffill').fillna(0)
+        signals['position'] = signals['signal'].replace(0, np.nan).ffill().fillna(0)
         
         return signals

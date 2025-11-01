@@ -28,12 +28,13 @@ def calculate_returns(signals: pd.DataFrame, stock1: pd.Series, stock2: pd.Serie
     return strategy_returns
 
 
-def calculate_performance_metrics(returns: pd.Series) -> Dict[str, float]:
+def calculate_performance_metrics(returns: pd.Series, signals: pd.DataFrame = None) -> Dict[str, float]:
     """
     Calculate performance metrics for a strategy.
     
     Args:
         returns: Series of strategy returns
+        signals: Optional DataFrame with trading signals to calculate num_trades
         
     Returns:
         Dictionary with performance metrics
@@ -50,13 +51,18 @@ def calculate_performance_metrics(returns: pd.Series) -> Dict[str, float]:
     
     win_rate = (returns > 0).sum() / len(returns) if len(returns) > 0 else 0
     
+    # Calculate number of trades from signals if provided
+    num_trades = 0
+    if signals is not None and 'position' in signals.columns:
+        num_trades = (signals['position'].diff() != 0).sum()
+    
     metrics = {
         'total_return': total_return,
         'annual_return': annual_return,
         'sharpe_ratio': sharpe_ratio,
         'max_drawdown': max_drawdown,
         'win_rate': win_rate,
-        'num_trades': (signals['position'].diff() != 0).sum() if 'position' in returns.name else 0
+        'num_trades': num_trades
     }
     
     return metrics
@@ -75,6 +81,6 @@ def backtest_strategy(signals: pd.DataFrame, stock1: pd.Series, stock2: pd.Serie
         Tuple of (returns_series, performance_metrics)
     """
     returns = calculate_returns(signals, stock1, stock2)
-    metrics = calculate_performance_metrics(returns)
+    metrics = calculate_performance_metrics(returns, signals)
     
     return returns, metrics
