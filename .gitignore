@@ -30,14 +30,14 @@ env/
 .ipynb_checkpoints
 *.ipynb_checkpoints/
 
-# Models and data
+# Models and data (saved models and downloaded data, not source code)
 *.h5
 *.pkl
 *.joblib
 *.pt
 *.pth
-models/
-data/
+/models/
+/data/
 *.csv
 
 # IDE
