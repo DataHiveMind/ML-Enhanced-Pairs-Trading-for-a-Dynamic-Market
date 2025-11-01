@@ -4,9 +4,14 @@ Simple test script to verify core functionality
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
+import sys
 
 print("Testing ML-Enhanced Pairs Trading Strategy Components")
 print("=" * 70)
+
+# Track test results
+failed_tests = []
+passed_tests = []
 
 # Test 1: Data Fetcher
 print("\n1. Testing Data Fetcher...")
@@ -30,10 +35,10 @@ try:
     print(f"   ✓ Data fetcher initialized")
     print(f"   ✓ Created synthetic data: {len(synthetic_prices)} days")
     print(f"   ✓ Calculated returns: {len(returns)} days")
+    passed_tests.append("Data Fetcher")
 except Exception as e:
     print(f"   ✗ Error: {e}")
-    import traceback
-    traceback.print_exc()
+    failed_tests.append("Data Fetcher")
 
 # Test 2: Pair Selector
 print("\n2. Testing Pair Selector...")
@@ -57,10 +62,10 @@ try:
     print(f"   ✓ Hedge ratio: {hedge_ratio:.4f}")
     print(f"   ✓ Spread calculated: {len(spread)} points")
     print(f"   ✓ Z-score calculated: {len(zscore.dropna())} points")
+    passed_tests.append("Pair Selector")
 except Exception as e:
     print(f"   ✗ Error: {e}")
-    import traceback
-    traceback.print_exc()
+    failed_tests.append("Pair Selector")
 
 # Test 3: LSTM Model
 print("\n3. Testing LSTM Model...")
@@ -87,10 +92,10 @@ try:
     print(f"   ✓ LSTM model initialized")
     print(f"   ✓ Model built with input shape: {(X.shape[1], X.shape[2])}")
     print(f"   ✓ Prepared sequences: X.shape={X.shape}, y.shape={y.shape}")
+    passed_tests.append("LSTM Model")
 except Exception as e:
     print(f"   ✗ Error: {e}")
-    import traceback
-    traceback.print_exc()
+    failed_tests.append("LSTM Model")
 
 # Test 4: Regime Classifier
 print("\n4. Testing Regime Classifier...")
@@ -112,10 +117,10 @@ try:
     print(f"   ✓ Regime classifier initialized")
     print(f"   ✓ Trained on {len(features)} samples")
     print(f"   ✓ Test accuracy: {metrics['test_accuracy']:.2f}")
+    passed_tests.append("Regime Classifier")
 except Exception as e:
     print(f"   ✗ Error: {e}")
-    import traceback
-    traceback.print_exc()
+    failed_tests.append("Regime Classifier")
 
 # Test 5: DQN Agent
 print("\n5. Testing DQN Agent...")
@@ -141,10 +146,10 @@ try:
     print(f"   ✓ DQN agent initialized")
     print(f"   ✓ Action selected: {action}")
     print(f"   ✓ Replay buffer size: {len(agent.replay_buffer)}")
+    passed_tests.append("DQN Agent")
 except Exception as e:
     print(f"   ✗ Error: {e}")
-    import traceback
-    traceback.print_exc()
+    failed_tests.append("DQN Agent")
 
 # Test 6: ML-Enhanced Strategy
 print("\n6. Testing ML-Enhanced Strategy...")
@@ -171,10 +176,10 @@ try:
     print(f"   ✓ Strategy initialized")
     print(f"   ✓ Generated {len(signals)} signals")
     print(f"   ✓ Signal distribution: {signals.value_counts().to_dict()}")
+    passed_tests.append("ML-Enhanced Strategy")
 except Exception as e:
     print(f"   ✗ Error: {e}")
-    import traceback
-    traceback.print_exc()
+    failed_tests.append("ML-Enhanced Strategy")
 
 # Test 7: Backtester
 print("\n7. Testing Backtester...")
@@ -186,13 +191,25 @@ try:
     print(f"   ✓ Backtester initialized")
     print(f"   ✓ Initial capital: ${backtester.initial_capital:,}")
     print(f"   ✓ Transaction cost: {backtester.transaction_cost*100:.2f}%")
+    passed_tests.append("Backtester")
 except Exception as e:
     print(f"   ✗ Error: {e}")
-    import traceback
-    traceback.print_exc()
+    failed_tests.append("Backtester")
 
 print("\n" + "=" * 70)
-print("✓ All core components tested successfully!")
-print("=" * 70)
-print("\nThe implementation is ready to use.")
-print("Run 'python main.py' to execute the full pipeline.")
+
+# Summary
+if len(failed_tests) == 0:
+    print("✓ All core components tested successfully!")
+    print("=" * 70)
+    print("\nThe implementation is ready to use.")
+    print("Run 'python main.py' to execute the full pipeline.")
+    sys.exit(0)
+else:
+    print(f"⚠ {len(failed_tests)} test(s) failed:")
+    for test in failed_tests:
+        print(f"  - {test}")
+    print("\n" + "=" * 70)
+    print(f"✓ {len(passed_tests)} test(s) passed")
+    print(f"✗ {len(failed_tests)} test(s) failed")
+    sys.exit(1)

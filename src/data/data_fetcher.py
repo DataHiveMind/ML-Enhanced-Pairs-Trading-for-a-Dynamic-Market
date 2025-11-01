@@ -46,7 +46,7 @@ class DataFetcher:
             prices = data['Adj Close']
         
         # Forward fill then backward fill to handle missing data
-        prices = prices.fillna(method='ffill').fillna(method='bfill')
+        prices = prices.ffill().bfill()
         
         return prices
     
